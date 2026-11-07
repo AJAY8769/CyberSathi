@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# User uploads and generated files
+backend/uploads/
+frontend/dist/
+
+# Operating system and editor files
+.DS_Store
+.vscode/
