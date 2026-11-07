@@ -9,9 +9,11 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: import.meta.env.MODE === 'production'
+    // Set VITE_API_URL in Vercel to the deployed backend URL ending in /api.
+    // Keep the current Render URL as a fallback so existing deployments continue working.
+    baseURL: import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'production'
         ? 'https://cybersathi-0wqe.onrender.com/api'
-        : 'http://localhost:5000/api',
+        : 'http://localhost:5000/api'),
     withCredentials: true,   // send httpOnly refresh cookie
 })
 
