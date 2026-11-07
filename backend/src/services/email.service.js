@@ -7,11 +7,17 @@ const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
     secure: process.env.SMTP_SECURE === 'true',   // true for 465
+    // Fail promptly when the provider cannot be reached (e.g. blocked SMTP ports).
+    connectionTimeout: 15000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
 });
+
+const fromAddress = process.env.SMTP_FROM || process.env.SMTP_USER;
 
 /**
  * Generate a cryptographically random 6-digit OTP string.
@@ -97,7 +103,7 @@ async function sendVerificationOtp(email, name, otp) {
       </div>`;
 
     return transporter.sendMail({
-        from: `"CyberSathi" <${process.env.SMTP_USER}>`,
+        from: `"CyberSathi" <${fromAddress}>`,
         to: email,
         subject: `${otp} is your CyberSathi verification code`,
         html: emailShell('Verify your CyberSathi account', body),
@@ -132,7 +138,7 @@ async function sendPasswordResetOtp(email, name, otp) {
       </p>`;
 
     return transporter.sendMail({
-        from: `"CyberSathi" <${process.env.SMTP_USER}>`,
+        from: `"CyberSathi" <${fromAddress}>`,
         to: email,
         subject: `${otp} is your CyberSathi password reset code`,
         html: emailShell('Reset your CyberSathi password', body),
